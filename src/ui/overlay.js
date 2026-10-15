@@ -12,6 +12,7 @@ const SKIP_SELECTOR = [
   ".cm-editor",
   ".monaco-editor",
   "[data-pc-i18n-skip]",
+  "[data-paperclip-instructions-react]",
 ].join(",");
 const STATUS_SKIP = new Set([
   "todo",
@@ -331,6 +332,7 @@ function applyTree(root, lang) {
 
 function applyAll() {
   const lang = getUiLanguage();
+  if (typeof mountInstructionsPanels === "function") mountInstructionsPanels(document.body, lang);
   applyTree(document.body, lang);
   document.documentElement.lang = lang === "ko" ? "ko" : "en";
 }
@@ -345,6 +347,7 @@ export function startOverlay() {
   observer = new MutationObserver((mutations) => {
     if (applyingOverlay) return;
     const lang = getUiLanguage();
+    if (typeof mountInstructionsPanels === "function") mountInstructionsPanels(document.body, lang);
     const skillRoots = new Set();
     for (const mutation of mutations) {
       if (mutation.type === "characterData" && overlayOwned.has(mutation.target)) continue;
